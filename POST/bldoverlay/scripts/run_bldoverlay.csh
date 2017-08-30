@@ -27,8 +27,8 @@
 #> Set the build directory if this was not set above 
 #> (this is where the
  executable is located by default).
- if ( ! -e ${BINDIR} ) then
-  setenv BINDIR ${CMAQ_HOME}/POST/bldoverlay/scripts/BLD_bldoverlay_${VRSN}_${compiler}
+ if ( ! $?BINDIR ) then
+  setenv BINDIR ${CMAQ_HOME}/POST/bldoverlay/scripts/BLD_bldoverlay_${VRSN}_${compilerString}
  endif
 
 #> Set the name of the executable.

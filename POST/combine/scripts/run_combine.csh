@@ -15,7 +15,6 @@
 #> Choose compiler and set up CMAQ environment with correct
 #> libraries using config.cmaq. Options: intel | gcc | pgi
  setenv compiler intel
- #setenv compilerVrsn 13.1
 
  #> Source the config.cmaq file to set the build environment
  cd ../../..
@@ -26,12 +25,13 @@
 
 #> Set General Parameters for Labeling the Simulation
  set MECH = cb6r3_ae6_aq          #> Mechanism ID
- set APPL = v52_intel_SE52BENCH	  #> Application Name (e.g. Code version, compiler, gridname, emissions, etc.)
+ set CASE = SE52BENCH
+ set APPL = v52_intel_$CASE	  #> Application Name (e.g. Code version, compiler, gridname, emissions, etc.)
 
 #> Set the build directory if this was not set above 
 #> (this is where the CMAQ executable is located by default).
- if ( ! -e $BINDIR ) then
-  setenv BINDIR $CMAQ_HOME/POST/combine/scripts/BLD_combine_${VRSN}_${compiler}
+ if ( ! $?BINDIR ) then
+  setenv BINDIR $CMAQ_HOME/POST/combine/scripts/BLD_combine_${VRSN}_${compilerString}
  endif
 
 #> Set the name of the executable.
@@ -41,9 +41,14 @@
  setenv REPO_HOME  ${CMAQ_REPO}
 
 #> Set working, input and output directories
- setenv METDIR     ${CMAQ_DATA}/met/mcip            #> Met Output Directory
+ setenv METDIR     ${CMAQ_DATA}/$CASE/met/mcip            #> Met Output Directory
  setenv CCTMOUTDIR ${CMAQ_DATA}/output_CCTM_${APPL} #> CCTM Output Directory
  setenv POSTDIR    ${CMAQ_DATA}/POST                #> Location where combine file will be written
+
+  if ( ! -e $POSTDIR ) then
+	  mkdir $POSTDIR
+  endif
+
 
 
 # =====================================================================
@@ -86,17 +91,17 @@
 
   #> Define name of combine output file to save hourly average concentration.
   #> A new file will be created for each month/year.
-   setenv OUTFILE ${POSTDIR}/COMBINE_ACONC_${APPL}_$MM$YYYY
+   setenv OUTFILE ${POSTDIR}/COMBINE_ACONC_${APPL}_$YYYY$MM.nc
 
   #> Define name of input files needed for combine program.
   #> File [1]: CMAQ conc/aconc file
   #> File [2]: MCIP METCRO3D file
   #> File [3]: CMAQ APMDIAG file
   #> File [4]: MCIP METCRO2D file
-   setenv INFILE1 $CCTMOUTDIR/CCTM_ACONC_${APPL}_$YYYY$MM$DD
-   setenv INFILE2 $METDIR/METCRO3D_$YY$MM$DD
-   setenv INFILE3 $CCTMOUTDIR/CCTM_APMDIAG_${APPL}_$YYYY$MM$DD
-   setenv INFILE4 $METDIR/METCRO2D_$YY$MM$DD
+   setenv INFILE1 $CCTMOUTDIR/CCTM_ACONC_${APPL}_$YYYY$MM$DD.nc
+   setenv INFILE2 $METDIR/METCRO3D_$YY$MM$DD.nc
+   setenv INFILE3 $CCTMOUTDIR/CCTM_APMDIAG_${APPL}_$YYYY$MM$DD.nc
+   setenv INFILE4 $METDIR/METCRO2D_$YY$MM$DD.nc
 
   #> Executable call:
    ${BINDIR}/${EXEC}
@@ -132,16 +137,16 @@
 
   #> Define name of combine output file to save hourly total deposition.
   #> A new file will be created for each month/year.
-   setenv OUTFILE ${POSTDIR}/COMBINE_DEP_${APPL}_$MM$YYYY
+   setenv OUTFILE ${POSTDIR}/COMBINE_DEP_${APPL}_$YYYY$MM
 
   #> Define name of input files needed for combine program.
   #> File [1]: CMAQ DRYDEP file
   #> File [2]: CMAQ WETDEP file
   #> File [3]: MCIP METCRO2D
   #> File [4]: {empty}
-   setenv INFILE1 $CCTMOUTDIR/CCTM_DRYDEP_${APPL}_$YYYY$MM$DD
-   setenv INFILE2 $CCTMOUTDIR/CCTM_WETDEP1_${APPL}_$YYYY$MM$DD
-   setenv INFILE3 $METDIR/METCRO2D_$YY$MM$DD
+   setenv INFILE1 $CCTMOUTDIR/CCTM_DRYDEP_${APPL}_$YYYY$MM$DD.nc
+   setenv INFILE2 $CCTMOUTDIR/CCTM_WETDEP1_${APPL}_$YYYY$MM$DD.nc
+   setenv INFILE3 $METDIR/METCRO2D_$YY$MM$DD.nc
    setenv INFILE4
 
   #> Executable call:

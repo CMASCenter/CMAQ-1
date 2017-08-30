@@ -15,7 +15,6 @@
 #> Choose compiler and set up CMAQ environment with correct 
 #> libraries using config.cmaq. Options: intel | gcc | pgi
  setenv compiler intel 
- setenv compilerVrsn 13.1
 
  cd ../../..
  source ./config_cmaq.csh
@@ -25,8 +24,8 @@
 
 #> Set the build directory if this was not set above 
 #> (this is where the executable is located by default).
- if ( ! -e ${BINDIR} ) then
-  setenv BINDIR ${CMAQ_HOME}/POST/sitecmp/scripts/BLD_sitecmp_${VRSN}_${compiler}
+ if ( ! $?BINDIR ) then
+  setenv BINDIR ${CMAQ_HOME}/POST/sitecmp/scripts/BLD_sitecmp_${VRSN}_${compilerString}
  endif
 
 #> Set the name of the executable.
@@ -63,7 +62,7 @@
  setenv GAS_5 "NOX,ppb,NO+NO2,ppb,NOX"           
  setenv GAS_6 "CO,ppb,CO,ppb,CO"                 
  setenv GAS_7 "SO2,ppb,SO2,ppb,SO2"              
- setenv GAS_8 "PM25,ug/m3,PMIJ,ug/m3,PM_TOT"     
+ setenv GAS_8 "PM25,ug/m3,ATOTIJ,ug/m3,PM_TOT"     
  setenv GAS_9 "PM25,ug/m3,PMIJ_FRM,ug/m3,PM_FRM" 
  setenv GAS_10 "PM10,ug/m3,PM10,ug/m3,PM10"       
  setenv GAS_11 "Isoprene,ppb,ISOP,ppb,Isoprene"  
@@ -86,8 +85,8 @@
 # ~~~~~~~~~~~~ END NETWORK SPECIFIC SECTION ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #> define time window
- setenv SDATE = "2011-07-1"    #> beginning date (July 1, 2011)
- setenv EDATE   = "2011-07-2"  #> ending date    (July 2, 2011)
+ setenv SDATE "2011-07-1"    #> beginning date (July 1, 2011)
+ setenv EDATE "2011-07-2"  #> ending date    (July 2, 2011)
  setenv START_TIME 0      
  setenv END_TIME   230000   
 
